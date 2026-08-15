@@ -32,9 +32,6 @@ def process_career_data():
     gcp_credentials = service_account.Credentials.from_service_account_file(key_path)
     client = bigquery.Client(credentials=gcp_credentials, project="remote-career-gcp-airflow")
 
-    # 1. Ask BigQuery for the IDs it already has
-    # We use a TRY block because if this is the very first time the script runs,
-    # the table won't exist yet and would throw an error!
     query = f"SELECT Job_ID FROM {table_id}"
 
     try:
@@ -45,8 +42,6 @@ def process_career_data():
         print(f"Table not found. Error:\n{e}")
         existing_ids = []
 
-    # 2. THE SHIELD: Filter the master_df
-    # This tells Pandas: Keep only the rows where the Job_ID is NOT (~) in the existing_ids list
     new_jobs_df = master_df[~master_df['Job_ID'].isin(existing_ids)]
 
     job_config = bigquery.LoadJobConfig(
@@ -65,8 +60,6 @@ def process_career_data():
         write_disposition="WRITE_APPEND", # Appends new rows instead of overwriting
     )
 
-    # 4. Only trigger the upload if there is actually new data!
-    # print("Initiating BigQuery Load Job...")
     if not new_jobs_df.empty:
         job = client.load_table_from_dataframe(
             new_jobs_df, table_id, job_config=job_config

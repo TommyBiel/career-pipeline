@@ -53,7 +53,3 @@ def adzuna_response_func(country):
 
     except Exception as e:
         print(e)
-
-# clean_jobs_dict = adzuna_response_func("gb")
-
-# print(clean_jobs_dict)

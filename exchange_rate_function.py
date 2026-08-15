@@ -20,7 +20,3 @@ def exchange_rate_function(currency):
 
     except Exception as e:
         print(e)
-
-# # Two function calls mean that the API uses requests twice!
-# exchange_rate_gbp_php = exchange_rate_function("GBP").get("conversion_rates", {}).get("PHP", 0)
-# exchange_rate_usd_php = exchange_rate_function("USD").get("conversion_rates", {}).get("PHP", 0)
